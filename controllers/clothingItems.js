@@ -6,7 +6,9 @@ const getClothingItems = (req, res) => {
     .then((items) => res.status(200).send(items))
     .catch((err) => {
       console.error(err);
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -21,7 +23,9 @@ const createClothingItem = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -43,7 +47,9 @@ const getClothingItem = (req, res) => {
           .status(BAD_REQUEST)
           .send({ message: "Invalid clothing item ID" });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -67,7 +73,9 @@ const likeItem = (req, res) => {
           .status(BAD_REQUEST)
           .send({ message: "Invalid clothing item ID" });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -91,7 +99,9 @@ const dislikeItem = (req, res) => {
           .status(BAD_REQUEST)
           .send({ message: "Invalid clothing item ID" });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -113,7 +123,9 @@ const deleteClothingItem = (req, res) => {
           .status(BAD_REQUEST)
           .send({ message: "Invalid clothing item ID" });
       }
-      return res.status(SERVER_ERROR).send({ message: err.message });
+      return res
+        .status(SERVER_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
