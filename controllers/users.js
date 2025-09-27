@@ -3,12 +3,13 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
+
 const UNAUTHORIZED = 401;
 
 const updateCurrentUser = (req, res) => {
   const userId = req.user._id;
   const { name, avatar } = req.body;
-  User.findByIdAndUpdate(
+  return User.findByIdAndUpdate(
     userId,
     { name, avatar },
     { new: true, runValidators: true }

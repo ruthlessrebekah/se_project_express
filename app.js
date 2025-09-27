@@ -7,6 +7,7 @@ const { NOT_FOUND } = require("./utils/errors");
 
 const app = express();
 app.use(cors());
+
 const { PORT = 3001 } = process.env;
 
 mongoose
