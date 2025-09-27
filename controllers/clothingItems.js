@@ -1,5 +1,3 @@
-// Trigger GitHub Actions
-
 const ClothingItem = require("../models/clothingItem");
 const {
   BAD_REQUEST,
@@ -10,28 +8,34 @@ const {
 
 const getClothingItems = (req, res) => {
   ClothingItem.find()
-    .then((items) => res.status(200).send(items))
+    .then((items) => res.status(200).json(items))
     .catch(() =>
       res
         .status(SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" })
+        .json({ message: "An error has occurred on the server" })
     );
 };
 
-const createClothingItem = (req, res) => {
-  const { name, weather, imageUrl } = req.body;
-  const owner = req.user._id;
-
-  ClothingItem.create({ name, weather, imageUrl, owner })
-    .then((item) => res.status(201).send(item))
-    .catch((err) => {
-      if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
-      }
-      return res
-        .status(SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
+const createClothingItem = async (req, res, next) => {
+  // Validation: ensure name is provided
+  if (!req.body.name) {
+    const error = new Error("Name is required");
+    error.statusCode = 400;
+    return next(error);
+  }
+  try {
+    const { name, weather, imageUrl } = req.body;
+    const owner = req.user._id;
+    const newItem = await ClothingItem.create({
+      name,
+      weather,
+      imageUrl,
+      owner,
     });
+    res.status(201).json(newItem);
+  } catch (err) {
+    next(err);
+  }
 };
 
 const getClothingItem = (req, res) => {
@@ -39,21 +43,21 @@ const getClothingItem = (req, res) => {
 
   ClothingItem.findById(itemId)
     .orFail()
-    .then((item) => res.status(200).send(item))
+    .then((item) => res.status(200).json(item))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND)
-          .send({ message: "Clothing item not found" });
+          .json({ message: "Clothing item not found" });
       }
       if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST)
-          .send({ message: "Invalid clothing item ID" });
+          .json({ message: "Invalid clothing item ID" });
       }
       return res
         .status(SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
+        .json({ message: "An error has occurred on the server" });
     });
 };
 
@@ -64,21 +68,21 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.status(200).send(item))
+    .then((item) => res.status(200).json(item))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND)
-          .send({ message: "Clothing item not found" });
+          .json({ message: "Clothing item not found" });
       }
       if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST)
-          .send({ message: "Invalid clothing item ID" });
+          .json({ message: "Invalid clothing item ID" });
       }
       return res
         .status(SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
+        .json({ message: "An error has occurred on the server" });
     });
 };
 
@@ -107,38 +111,30 @@ const dislikeItem = (req, res) => {
     });
 };
 
-const deleteClothingItem = (req, res) => {
+const deleteClothingItem = (req, res, next) => {
   const { itemId } = req.params;
   ClothingItem.findById(itemId)
     .then((item) => {
       if (!item) {
-        // Item not found
         return res
           .status(NOT_FOUND)
-          .send({ message: "Clothing item not found" });
+          .json({ message: "Clothing item not found" });
       }
       if (String(item.owner) !== String(req.user._id)) {
-        // Item exists, but user is not the owner
         return res
           .status(FORBIDDEN)
-          .send({ message: "You do not have permission to delete this item" });
+          .json({ message: "You do not have permission to delete this item" });
       }
-      // Item exists and user is the owner
       return ClothingItem.findByIdAndDelete(itemId).then((deletedItem) =>
-        res.status(200).send(deletedItem)
+        res.status(200).json(deletedItem)
       );
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        // Invalid ID format
-        return res
-          .status(BAD_REQUEST)
-          .send({ message: "Invalid clothing item ID" });
+        err.statusCode = 400;
+        err.message = "Invalid clothing item ID";
       }
-      // Server error
-      return res
-        .status(SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
+      next(err);
     });
 };
 

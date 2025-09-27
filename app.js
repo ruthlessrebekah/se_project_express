@@ -35,4 +35,10 @@ app.use((req, res) => {
   res.status(NOT_FOUND).send({ message: "Requested resource not found" });
 });
 
+app.use((err, req, res, next) => {
+  const status = err.statusCode || (err.name === "ValidationError" ? 400 : 500);
+  const message = err.message || "An error has occurred on the server";
+  res.status(status).json({ message });
+});
+
 app.listen(PORT, () => {});
