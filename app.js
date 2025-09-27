@@ -9,10 +9,11 @@ const auth = require("./middlewares/auth");
 
 const app = express();
 
+// Test user injection for NODE_ENV === "test"
 if (process.env.NODE_ENV === "test") {
-  app.use((req, res, next) => {
+  app.use((req, res, _) => {
     req.user = { _id: process.env.TEST_USER_ID || "5d8b8592978f8bd833ca8133" };
-    next();
+    _();
   });
 }
 
@@ -31,11 +32,12 @@ app.post("/signup", createUser); // Public
 app.post("/signin", signin); // Public
 app.use(auth); // All routes below require auth
 app.use("/", mainRouter);
+
 app.use((req, res) => {
   res.status(NOT_FOUND).send({ message: "Requested resource not found" });
 });
 
-// Error handling middleware (MUST be last, keep 'next' parameter)
+/* eslint-disable-next-line no-unused-vars */
 app.use((err, req, res, next) => {
   const status = err.statusCode || (err.name === "ValidationError" ? 400 : 500);
   const code = err.code || err.name || "SERVER_ERROR";
