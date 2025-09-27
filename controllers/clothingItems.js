@@ -10,7 +10,7 @@ const getClothingItems = (req, res) => {
   ClothingItem.find()
     .then((items) => res.status(200).send(items))
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       return res
         .status(SERVER_ERROR)
         .send({ message: "An error has occurred on the server" });
@@ -24,7 +24,7 @@ const createClothingItem = (req, res) => {
   ClothingItem.create({ name, weather, imageUrl, owner })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
@@ -41,7 +41,7 @@ const getClothingItem = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND)
@@ -67,7 +67,7 @@ const likeItem = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND)
@@ -93,7 +93,7 @@ const dislikeItem = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND)
@@ -124,12 +124,12 @@ const deleteClothingItem = (req, res) => {
           .status(FORBIDDEN)
           .send({ message: "You do not have permission to delete this item" });
       }
-      return ClothingItem.findByIdAndDelete(itemId).then((deletedItem) => {
-        return res.status(200).send(deletedItem);
-      });
+      return ClothingItem.findByIdAndDelete(itemId).then((deletedItem) =>
+        res.status(200).send(deletedItem)
+      );
     })
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST)

@@ -1,3 +1,10 @@
+const User = require("../models/user");
+const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
+const { JWT_SECRET } = require("../utils/config");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const UNAUTHORIZED = 401;
+
 const updateCurrentUser = (req, res) => {
   const userId = req.user._id;
   const { name, avatar } = req.body;
@@ -9,7 +16,7 @@ const updateCurrentUser = (req, res) => {
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "User not found" });
       }
@@ -21,11 +28,6 @@ const updateCurrentUser = (req, res) => {
         .send({ message: "An error has occurred on the server" });
     });
 };
-const User = require("../models/user");
-const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
-const { JWT_SECRET } = require("../utils/config");
-const jwt = require("jsonwebtoken");
-const UNAUTHORIZED = 401;
 const signin = (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -41,7 +43,7 @@ const signin = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       res.status(UNAUTHORIZED).send({ message: "Incorrect email or password" });
     });
 };
@@ -50,14 +52,13 @@ const getUsers = (req, res) => {
   User.find()
     .then((users) => res.status(200).send(users))
     .catch((err) => {
-      console.error(err);
+      // console.error(err);
       return res
         .status(SERVER_ERROR)
         .send({ message: "An error has occurred on the server" });
     });
 };
 
-const bcrypt = require("bcryptjs");
 const CONFLICT = 409;
 
 const createUser = (req, res) => {
@@ -70,7 +71,7 @@ const createUser = (req, res) => {
       // Don't return password hash in response
       const userObj = user.toObject();
       delete userObj.password;
-      res.status(201).send(userObj);
+      // console.error(err);
     })
     .catch((err) => {
       console.error(err);
@@ -89,7 +90,7 @@ const createUser = (req, res) => {
 const getCurrentUser = (req, res) => {
   const userId = req.user._id;
   User.findById(userId)
-    .orFail()
+    // console.error(err);
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       console.error(err);
