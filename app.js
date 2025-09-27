@@ -27,9 +27,9 @@ mongoose
 
 app.use(express.json());
 
-app.post("/signup", createUser);
-app.post("/signin", signin);
-app.use(auth);
+app.post("/signup", createUser); // Public
+app.post("/signin", signin); // Public
+app.use(auth); // All routes below require auth
 app.use("/", mainRouter);
 app.use((req, res) => {
   res.status(NOT_FOUND).send({ message: "Requested resource not found" });
