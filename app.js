@@ -11,24 +11,17 @@ const { PORT = 3001 } = process.env;
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
-  .then(() => {
-    // console.log("Connected to DB"); // Remove for production
-  })
-  .catch(() => {
-    // Handle DB connection error
-  });
+  .then(() => {})
+  .catch(() => {});
 
 app.use(express.json());
 const auth = require("./middlewares/auth");
 app.post("/signup", createUser);
 app.post("/signin", signin);
-// app.get("/items", require("./controllers/clothingItems").getClothingItems); // Already handled by mainRouter
 app.use(auth);
 app.use("/", mainRouter);
 app.use((req, res) => {
   res.status(NOT_FOUND).send({ message: "Requested resource not found" });
 });
 
-app.listen(PORT, () => {
-  // console.log(`Listening on port ${PORT}`); // Remove for production
-});
+app.listen(PORT, () => {});

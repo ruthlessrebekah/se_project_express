@@ -9,12 +9,11 @@ const {
 const getClothingItems = (req, res) => {
   ClothingItem.find()
     .then((items) => res.status(200).send(items))
-    .catch((err) => {
-      // console.error(err);
-      return res
+    .catch(() =>
+      res
         .status(SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
-    });
+        .send({ message: "An error has occurred on the server" })
+    );
 };
 
 const createClothingItem = (req, res) => {
@@ -24,7 +23,6 @@ const createClothingItem = (req, res) => {
   ClothingItem.create({ name, weather, imageUrl, owner })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
-      // console.error(err);
       if (err.name === "ValidationError") {
         return res.status(BAD_REQUEST).send({ message: err.message });
       }
@@ -41,7 +39,6 @@ const getClothingItem = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
-      // console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND)
@@ -67,7 +64,6 @@ const likeItem = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
-      // console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND)
@@ -93,7 +89,6 @@ const dislikeItem = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
-      // console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res
           .status(NOT_FOUND)
@@ -129,7 +124,6 @@ const deleteClothingItem = (req, res) => {
       );
     })
     .catch((err) => {
-      // console.error(err);
       if (err.name === "CastError") {
         return res
           .status(BAD_REQUEST)

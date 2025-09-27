@@ -1,8 +1,8 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 const UNAUTHORIZED = 401;
 
 const updateCurrentUser = (req, res) => {
@@ -16,7 +16,6 @@ const updateCurrentUser = (req, res) => {
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      // console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "User not found" });
       }
@@ -42,21 +41,19 @@ const signin = (req, res) => {
       });
       res.send({ token });
     })
-    .catch((err) => {
-      // console.error(err);
-      res.status(UNAUTHORIZED).send({ message: "Incorrect email or password" });
-    });
+    .catch(() =>
+      res.status(UNAUTHORIZED).send({ message: "Incorrect email or password" })
+    );
 };
 
 const getUsers = (req, res) => {
   User.find()
     .then((users) => res.status(200).send(users))
-    .catch((err) => {
-      // console.error(err);
-      return res
+    .catch(() =>
+      res
         .status(SERVER_ERROR)
-        .send({ message: "An error has occurred on the server" });
-    });
+        .send({ message: "An error has occurred on the server" })
+    );
 };
 
 const CONFLICT = 409;
@@ -68,13 +65,11 @@ const createUser = (req, res) => {
     .hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => {
-      // Don't return password hash in response
       const userObj = user.toObject();
       delete userObj.password;
-      // console.error(err);
+      res.status(201).send(userObj);
     })
     .catch((err) => {
-      console.error(err);
       if (err.code === 11000) {
         return res.status(CONFLICT).send({ message: "Email already exists" });
       }
@@ -90,10 +85,8 @@ const createUser = (req, res) => {
 const getCurrentUser = (req, res) => {
   const userId = req.user._id;
   User.findById(userId)
-    // console.error(err);
     .then((user) => res.status(200).send(user))
     .catch((err) => {
-      console.error(err);
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "User not found" });
       }
