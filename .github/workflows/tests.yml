@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+env:
+  NODE_ENV: test
 jobs:
   read_sprint_file:
     if: ${{ github.repository != 'tripleten-com/se_project_express' }}

@@ -13,3 +13,6 @@ node_modules
 .DS_Store
 .idea
 .vscode
+
+# Ignore the tests folder (TripleTen public test repo)
+tests/
