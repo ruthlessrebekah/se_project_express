@@ -1,3 +1,14 @@
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+
+const mainRouter = require("./routes/index");
+const { signin, createUser } = require("./controllers/users");
+const { NOT_FOUND } = require("./utils/errors");
+const auth = require("./middlewares/auth");
+
+const app = express();
+
 if (process.env.NODE_ENV === "test") {
   app.use((req, res, next) => {
     req.user = { _id: process.env.TEST_USER_ID || "5d8b8592978f8bd833ca8133" };
@@ -5,15 +16,6 @@ if (process.env.NODE_ENV === "test") {
   });
 }
 
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const mainRouter = require("./routes/index");
-const { signin, createUser } = require("./controllers/users");
-const { NOT_FOUND } = require("./utils/errors");
-const auth = require("./middlewares/auth");
-
-const app = express();
 app.use(cors());
 
 const { PORT = 3001 } = process.env;
