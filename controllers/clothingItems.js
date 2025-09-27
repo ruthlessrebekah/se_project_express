@@ -110,25 +110,30 @@ const deleteClothingItem = (req, res) => {
   ClothingItem.findById(itemId)
     .then((item) => {
       if (!item) {
+        // Item not found
         return res
           .status(NOT_FOUND)
           .send({ message: "Clothing item not found" });
       }
       if (String(item.owner) !== String(req.user._id)) {
+        // Item exists, but user is not the owner
         return res
           .status(FORBIDDEN)
           .send({ message: "You do not have permission to delete this item" });
       }
+      // Item exists and user is the owner
       return ClothingItem.findByIdAndDelete(itemId).then((deletedItem) =>
         res.status(200).send(deletedItem)
       );
     })
     .catch((err) => {
       if (err.name === "CastError") {
+        // Invalid ID format
         return res
           .status(BAD_REQUEST)
           .send({ message: "Invalid clothing item ID" });
       }
+      // Server error
       return res
         .status(SERVER_ERROR)
         .send({ message: "An error has occurred on the server" });
