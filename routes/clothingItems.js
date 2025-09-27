@@ -24,17 +24,17 @@ function handleDeleteRoute(authFirst) {
       if (authFirst) {
         // Auth first (production)
         return deleteClothingItem(req, res, next);
-      } else {
-        // Auth after existence check (test)
-        return auth(req, res, () => deleteClothingItem(req, res, next));
       }
+      // Auth after existence check (test)
+      return auth(req, res, () => deleteClothingItem(req, res, next));
     } catch (err) {
       // Handle malformed ObjectId
       if (err.name === "CastError") {
         err.statusCode = 400;
         err.message = "Invalid clothing item ID";
+        return res.status(400).json({ message: "Invalid clothing item ID" });
       }
-      next(err);
+      return next(err);
     }
   };
 }

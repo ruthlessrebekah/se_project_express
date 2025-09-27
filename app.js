@@ -35,10 +35,12 @@ app.use((req, res) => {
   res.status(NOT_FOUND).send({ message: "Requested resource not found" });
 });
 
+// Error handling middleware (MUST be last, keep 'next' parameter)
 app.use((err, req, res, next) => {
   const status = err.statusCode || (err.name === "ValidationError" ? 400 : 500);
+  const code = err.code || err.name || "SERVER_ERROR";
   const message = err.message || "An error has occurred on the server";
-  res.status(status).json({ message });
+  res.status(status).json({ code, message });
 });
 
 app.listen(PORT, () => {});
