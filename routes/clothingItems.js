@@ -9,13 +9,14 @@ const {
 } = require("../controllers/clothingItems");
 const auth = require("../middlewares/auth");
 
+// Public route
 router.get("/", getClothingItems);
+
+// Protected routes
+router.use(auth);
 router.post("/", createClothingItem);
 router.get("/:itemId", getClothingItem);
-
-// UPDATED: Authentication now occurs first for DELETE
-router.delete("/:itemId", auth, deleteClothingItem);
-
+router.delete("/:itemId", deleteClothingItem);
 router.put("/:itemId/likes", likeItem);
 router.delete("/:itemId/likes", dislikeItem);
 

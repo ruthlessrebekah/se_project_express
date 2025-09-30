@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const mainRouter = require("./routes/index");
 const { signin, createUser } = require("./controllers/users");
-const { NOT_FOUND } = require("./utils/errors");
+const { NOT_FOUND, BAD_REQUEST, SERVER_ERROR } = require("./utils/errors");
 const auth = require("./middlewares/auth");
 
 const app = express();
@@ -28,10 +28,14 @@ mongoose
 
 app.use(express.json());
 
-app.post("/signup", createUser); // Public
-app.post("/signin", signin); // Public
-app.use(auth); // All routes below require auth
-app.use("/", mainRouter);
+// Public routes
+app.post("/signup", createUser);
+app.post("/signin", signin);
+app.use("/items", require("./routes/clothingItems"));
+
+// Protected routes
+app.use(auth);
+app.use("/users", require("./routes/users"));
 
 app.use((req, res) => {
   res.status(NOT_FOUND).send({ message: "Requested resource not found" });
@@ -39,7 +43,9 @@ app.use((req, res) => {
 
 /* eslint-disable-next-line no-unused-vars */
 app.use((err, req, res, next) => {
-  const status = err.statusCode || (err.name === "ValidationError" ? 400 : 500);
+  const status =
+    err.statusCode ||
+    (err.name === "ValidationError" ? BAD_REQUEST : SERVER_ERROR);
   const code = err.code || err.name || "SERVER_ERROR";
   const message = err.message || "An error has occurred on the server";
   res.status(status).json({ code, message });
