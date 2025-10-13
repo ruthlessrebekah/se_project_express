@@ -15,8 +15,12 @@ const { PORT = 3001 } = process.env;
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
-  .then(() => {})
-  .catch(() => {});
+  .then(() => {
+    console.log("Connected to MongoDB successfully");
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err.message);
+  });
 
 app.use(express.json());
 
@@ -36,4 +40,6 @@ app.use((err, req, res, next) => {
   res.status(status).json({ code, message });
 });
 
-app.listen(PORT, () => {});
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
