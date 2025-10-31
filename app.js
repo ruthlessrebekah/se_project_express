@@ -1,15 +1,21 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+const { errors } = require("celebrate");
 
 const mainRouter = require("./routes/index");
-const { NOT_FOUND, BAD_REQUEST, SERVER_ERROR } = require("./utils/errors");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
+const { NOT_FOUND } = require("./utils/errors");
+const errorHandler = require("./middlewares/error-handler");
 
 const app = express();
 
 app.use(cors());
 app.use(cookieParser());
+app.use(requestLogger);
 
 const { PORT = 3001 } = process.env;
 
@@ -25,20 +31,17 @@ mongoose
 app.use(express.json());
 
 app.use(mainRouter);
+app.use(errorLogger);
 
 app.use((req, res) => {
   res.status(NOT_FOUND).send({ message: "Requested resource not found" });
 });
 
-/* eslint-disable-next-line no-unused-vars */
-app.use((err, req, res, next) => {
-  const status =
-    err.statusCode ||
-    (err.name === "ValidationError" ? BAD_REQUEST : SERVER_ERROR);
-  const code = err.code || err.name || "SERVER_ERROR";
-  const message = err.message || "An error has occurred on the server";
-  res.status(status).json({ code, message });
-});
+// Celebrate error handler middleware
+app.use(errors());
+
+// Use centralized error handling middleware
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -1,5 +1,9 @@
 const router = require("express").Router();
 const {
+  validateClothingItem,
+  validateId,
+} = require("../middlewares/validation");
+const {
   getClothingItems,
   createClothingItem,
   getClothingItem,
@@ -14,9 +18,9 @@ router.get("/", getClothingItems);
 
 // Protected routes
 router.use(auth);
-router.post("/", createClothingItem);
+router.post("/", validateClothingItem, createClothingItem);
 router.get("/:itemId", getClothingItem);
-router.delete("/:itemId", deleteClothingItem);
+router.delete("/:itemId", validateId, deleteClothingItem);
 router.put("/:itemId/likes", likeItem);
 router.delete("/:itemId/likes", dislikeItem);
 
