@@ -30,6 +30,13 @@ mongoose
 
 app.use(express.json());
 
+// Remove this code after passing test review
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
+
 app.use(mainRouter);
 app.use(errorLogger);
 
