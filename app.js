@@ -29,24 +29,8 @@ app.use(
     optionsSuccessStatus: 204,
   })
 );
-// Explicitly handle preflight OPTIONS requests for all routes
-app.options(
-  "*",
-  cors({
-    origin: "https://ruthless-wtwr-2025.jumpingcrab.com",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "Origin",
-      "Accept",
-      "X-Requested-With",
-      "Cookie",
-    ],
-    optionsSuccessStatus: 204,
-  })
-);
+app.use(cors());
+app.options("*", cors());
 app.use(cookieParser());
 app.use(requestLogger);
 
