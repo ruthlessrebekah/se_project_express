@@ -13,7 +13,40 @@ const errorHandler = require("./middlewares/error-handler");
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://ruthless-wtwr-2025.jumpingcrab.com",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Origin",
+      "Accept",
+      "X-Requested-With",
+      "Cookie",
+    ],
+    optionsSuccessStatus: 204,
+  })
+);
+// Explicitly handle preflight OPTIONS requests for all routes
+app.options(
+  "*",
+  cors({
+    origin: "https://ruthless-wtwr-2025.jumpingcrab.com",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Origin",
+      "Accept",
+      "X-Requested-With",
+      "Cookie",
+    ],
+    optionsSuccessStatus: 204,
+  })
+);
 app.use(cookieParser());
 app.use(requestLogger);
 
