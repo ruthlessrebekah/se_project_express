@@ -1,6 +1,7 @@
-const { validateUser, validateLogin } = require("../middlewares/validation");
-const router = require("express").Router();
+const express = require("express");
 
+const router = express.Router();
+const { validateUser } = require("../middlewares/validation");
 const { getCurrentUser, updateCurrentUser } = require("../controllers/users");
 
 router.get("/me", getCurrentUser);

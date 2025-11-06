@@ -2,7 +2,7 @@ const { BAD_REQUEST, SERVER_ERROR } = require("../utils/errors");
 
 const errorHandler = (err, req, res, next) => {
   // Log the error to console
-  console.error(err);
+  // console.error(err);
 
   // Determine status code
   let statusCode = err.statusCode || SERVER_ERROR;

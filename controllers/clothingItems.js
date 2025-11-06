@@ -3,14 +3,12 @@ const {
   BadRequestError,
   NotFoundError,
   ForbiddenError,
-  ConflictError,
 } = require("../utils/errors");
 
-const getClothingItems = (req, res, next) => {
+const getClothingItems = (req, res, next) =>
   ClothingItem.find()
     .then((items) => res.status(200).json(items))
     .catch((err) => next(err));
-};
 
 const createClothingItem = async (req, res, next) => {
   if (!req.body.name) {
@@ -25,15 +23,15 @@ const createClothingItem = async (req, res, next) => {
       imageUrl,
       owner,
     });
-    res.status(201).json(newItem);
+    return res.status(201).json(newItem);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 
 const getClothingItem = (req, res, next) => {
   const { itemId } = req.params;
-  ClothingItem.findById(itemId)
+  return ClothingItem.findById(itemId)
     .orFail()
     .then((item) => res.status(200).json(item))
     .catch((err) => {
@@ -43,7 +41,7 @@ const getClothingItem = (req, res, next) => {
       if (err.name === "CastError") {
         return next(new BadRequestError("Invalid clothing item ID"));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -57,21 +55,12 @@ const likeItem = (req, res, next) => {
     .then((item) => res.status(200).json(item))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
-        const customError = new Error("Clothing item not found");
-        customError.statusCode = NOT_FOUND;
-        customError.code = "NOT_FOUND";
-        return next(customError);
+        return next(new NotFoundError("Clothing item not found"));
       }
       if (err.name === "CastError") {
-        const customError = new Error("Invalid clothing item ID");
-        customError.statusCode = BAD_REQUEST;
-        customError.code = "BAD_REQUEST";
-        return next(customError);
+        return next(new BadRequestError("Invalid clothing item ID"));
       }
-      const customError = new Error("An error has occurred on the server");
-      customError.statusCode = SERVER_ERROR;
-      customError.code = "SERVER_ERROR";
-      return next(customError);
+      return next(err);
     });
 };
 
@@ -85,21 +74,12 @@ const dislikeItem = (req, res, next) => {
     .then((item) => res.status(200).json(item))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
-        const customError = new Error("Clothing item not found");
-        customError.statusCode = NOT_FOUND;
-        customError.code = "NOT_FOUND";
-        return next(customError);
+        return next(new NotFoundError("Clothing item not found"));
       }
       if (err.name === "CastError") {
-        const customError = new Error("Invalid clothing item ID");
-        customError.statusCode = BAD_REQUEST;
-        customError.code = "BAD_REQUEST";
-        return next(customError);
+        return next(new BadRequestError("Invalid clothing item ID"));
       }
-      const customError = new Error("An error has occurred on the server");
-      customError.statusCode = SERVER_ERROR;
-      customError.code = "SERVER_ERROR";
-      return next(customError);
+      return next(err);
     });
 };
 
@@ -108,15 +88,12 @@ const deleteClothingItem = (req, res, next) => {
   ClothingItem.findById(itemId)
     .then((item) => {
       if (!item) {
-        const error = new Error("Clothing item not found");
-        error.statusCode = NOT_FOUND;
-        error.code = "NOT_FOUND";
-        return next(error);
+        return next(new NotFoundError("Clothing item not found"));
       }
       if (String(item.owner) !== String(req.user._id)) {
-        return res
-          .status(FORBIDDEN)
-          .json({ message: "You do not have permission to delete this item" });
+        return next(
+          new ForbiddenError("You do not have permission to delete this item")
+        );
       }
       return ClothingItem.findByIdAndDelete(itemId).then((deletedItem) =>
         res.status(200).json(deletedItem)
@@ -124,15 +101,9 @@ const deleteClothingItem = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        const customError = new Error("Invalid clothing item ID");
-        customError.statusCode = BAD_REQUEST;
-        customError.code = "BAD_REQUEST";
-        return next(customError);
+        return next(new BadRequestError("Invalid clothing item ID"));
       }
-      const customError = new Error("An error has occurred on the server");
-      customError.statusCode = SERVER_ERROR;
-      customError.code = "SERVER_ERROR";
-      return next(customError);
+      return next(err);
     });
 };
 

@@ -26,7 +26,7 @@ const updateCurrentUser = (req, res, next) => {
       if (err.name === "ValidationError") {
         return next(new BadRequestError(err.message));
       }
-      next(err);
+      return next(err);
     });
 };
 const signin = (req, res, next) => {
@@ -55,21 +55,24 @@ const signin = (req, res, next) => {
       ) {
         return next(new UnauthorizedError("Incorrect email or password"));
       }
-      next(err);
+      return next(err);
     });
 };
-// ...existing code...
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
-  bcrypt
+  if (!name || !email || !password) {
+    return next(new BadRequestError("Name, email, and password are required"));
+  }
+
+  return bcrypt
     .hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => {
       const userObj = user.toObject();
       delete userObj.password;
-      res.status(201).send(userObj);
+      return res.status(201).send(userObj);
     })
     .catch((err) => {
       if (err.code === 11000) {
@@ -78,26 +81,24 @@ const createUser = (req, res) => {
       if (err.name === "ValidationError") {
         return next(new BadRequestError(err.message));
       }
-      next(err);
+      return next(err);
     });
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
-  User.findById(userId)
+  return User.findById(userId)
     .then((user) => {
       if (!user) {
         return next(new NotFoundError("User not found"));
       }
-      const userObj = user.toObject();
-      delete userObj.password;
-      return res.status(200).send(userObj);
+      return res.status(200).send({ ...user.toObject(), password: undefined });
     })
     .catch((err) => {
       if (err.name === "CastError") {
         return next(new BadRequestError("Invalid user ID"));
       }
-      next(err);
+      return next(err);
     });
 };
 
