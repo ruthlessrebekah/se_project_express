@@ -1,3 +1,6 @@
+const { Joi, celebrate } = require("celebrate");
+const validator = require("validator");
+
 // Profile update validation (only name and avatar)
 const validateProfileUpdate = celebrate({
   body: Joi.object().keys({
@@ -12,8 +15,6 @@ const validateProfileUpdate = celebrate({
     }),
   }),
 });
-const { Joi, celebrate } = require("celebrate");
-const validator = require("validator");
 
 // Custom URL validator using validator.isURL
 const validateURL = (value, helpers) => {
