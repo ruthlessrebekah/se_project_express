@@ -29,7 +29,7 @@ app.use(
     optionsSuccessStatus: 204,
   })
 );
-
+console.log("CORS config loaded");
 app.use(cookieParser());
 app.use(requestLogger);
 
