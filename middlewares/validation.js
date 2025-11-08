@@ -1,6 +1,14 @@
 const { Joi, celebrate } = require("celebrate");
 const validator = require("validator");
 
+// Custom URL validator using validator.isURL
+const validateURL = (value, helpers) => {
+  if (validator.isURL(value)) {
+    return value;
+  }
+  return helpers.error("string.uri");
+};
+
 // Profile update validation (only name and avatar)
 const validateProfileUpdate = celebrate({
   body: Joi.object().keys({
@@ -15,14 +23,6 @@ const validateProfileUpdate = celebrate({
     }),
   }),
 });
-
-// Custom URL validator using validator.isURL
-const validateURL = (value, helpers) => {
-  if (validator.isURL(value)) {
-    return value;
-  }
-  return helpers.error("string.uri");
-};
 
 // Clothing item creation validation
 const validateClothingItem = celebrate({
