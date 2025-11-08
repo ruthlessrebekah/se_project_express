@@ -15,7 +15,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://ruthless-wtwr-2025.jumpingcrab.com",
+    origin: [
+      "https://ruthless-wtwr-2025.jumpingcrab.com",
+      "https://www.ruthless-wtwr-2025.jumpingcrab.com",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: [
@@ -29,6 +32,7 @@ app.use(
     optionsSuccessStatus: 204,
   })
 );
+
 console.log("CORS config loaded");
 app.use(cookieParser());
 app.use(requestLogger);
