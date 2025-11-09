@@ -33,7 +33,6 @@ app.use(
   })
 );
 
-console.log("CORS config loaded");
 app.use(cookieParser());
 app.use(requestLogger);
 
