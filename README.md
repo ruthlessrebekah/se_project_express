@@ -53,6 +53,11 @@ Before committing your code, make sure you edit the file `sprint.txt` in the roo
 - All endpoints return JSON objects with relevant data or error messages
 - Postman tests for validation, authorization, and error handling
 
+## Domain Names
+
+**Frontend:** https://ruthless-wtwr-2025.jumpingcrab.com
+**Backend:** https://api.ruthless-wtwr-2025.jumpingcrab.com (or your deployed backend domain)
+
 ## Project Pitch Video
 
 Check out [my WTWR Project Pitch Video](https://www.loom.com/share/dc79bf894154495192fe12d41f1661ac), where I describe my project and some challenges I faced while building it.

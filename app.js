@@ -1,14 +1,16 @@
 require("dotenv").config();
 
 const express = require("express");
+const helmet = require("helmet");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const { errors } = require("celebrate");
 
 const mainRouter = require("./routes/index");
+const rateLimiter = require("./middlewares/rateLimiter");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
-const { NOT_FOUND } = require("./utils/errors");
+const { NotFoundError } = require("./utils/errors");
 const errorHandler = require("./middlewares/error-handler");
 
 const app = express();
@@ -35,6 +37,8 @@ app.use(
 
 app.use(cookieParser());
 app.use(requestLogger);
+app.use(helmet());
+app.use(rateLimiter);
 
 const { PORT = 3001 } = process.env;
 
@@ -59,8 +63,8 @@ app.get("/crash-test", () => {
 app.use(mainRouter);
 app.use(errorLogger);
 
-app.use((req, res) => {
-  res.status(NOT_FOUND).send({ message: "Requested resource not found" });
+app.use((req, res, next) => {
+  next(new NotFoundError("Requested resource not found"));
 });
 
 // Celebrate error handler middleware

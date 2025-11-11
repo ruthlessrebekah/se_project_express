@@ -6,7 +6,6 @@ const {
 const {
   getClothingItems,
   createClothingItem,
-  getClothingItem,
   deleteClothingItem,
   likeItem,
   dislikeItem,
@@ -19,9 +18,9 @@ router.get("/", getClothingItems);
 // Protected routes
 router.use(auth);
 router.post("/", validateClothingItem, createClothingItem);
-router.get("/:itemId", getClothingItem);
+
 router.delete("/:itemId", validateId, deleteClothingItem);
-router.put("/:itemId/likes", likeItem);
-router.delete("/:itemId/likes", dislikeItem);
+router.put("/:itemId/likes", validateId, likeItem);
+router.delete("/:itemId/likes", validateId, dislikeItem);
 
 module.exports = router;

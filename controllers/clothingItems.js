@@ -29,22 +29,6 @@ const createClothingItem = async (req, res, next) => {
   }
 };
 
-const getClothingItem = (req, res, next) => {
-  const { itemId } = req.params;
-  return ClothingItem.findById(itemId)
-    .orFail()
-    .then((item) => res.status(200).json(item))
-    .catch((err) => {
-      if (err.name === "DocumentNotFoundError") {
-        return next(new NotFoundError("Clothing item not found"));
-      }
-      if (err.name === "CastError") {
-        return next(new BadRequestError("Invalid clothing item ID"));
-      }
-      return next(err);
-    });
-};
-
 const likeItem = (req, res, next) => {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
@@ -110,7 +94,6 @@ const deleteClothingItem = (req, res, next) => {
 module.exports = {
   getClothingItems,
   createClothingItem,
-  getClothingItem,
   deleteClothingItem,
   likeItem,
   dislikeItem,
