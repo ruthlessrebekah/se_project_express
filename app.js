@@ -63,10 +63,6 @@ app.get("/crash-test", () => {
 app.use(mainRouter);
 app.use(errorLogger);
 
-app.use((req, res, next) => {
-  next(new NotFoundError("Requested resource not found"));
-});
-
 // Celebrate error handler middleware
 app.use(errors());
 
