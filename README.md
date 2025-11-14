@@ -56,7 +56,7 @@ Before committing your code, make sure you edit the file `sprint.txt` in the roo
 ## Domain Names
 
 **Frontend:** https://ruthless-wtwr-2025.jumpingcrab.com
-**Backend:** https://api.ruthless-wtwr-2025.jumpingcrab.com (or your deployed backend domain)
+**Backend:** https://api.ruthless-wtwr-2025.jumpingcrab.com
 
 ## Project Pitch Video
 
