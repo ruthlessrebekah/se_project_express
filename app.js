@@ -10,7 +10,6 @@ const { errors } = require("celebrate");
 const mainRouter = require("./routes/index");
 const rateLimiter = require("./middlewares/rateLimiter");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
-const { NotFoundError } = require("./utils/errors");
 const errorHandler = require("./middlewares/error-handler");
 
 const app = express();
