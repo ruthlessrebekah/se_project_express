@@ -17,8 +17,9 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://ruthless-wtwr-2025.jumpingcrab.com",
-      "https://www.ruthless-wtwr-2025.jumpingcrab.com",
+      "https://se-project-react-1pv7.onrender.com",
+      // Uncomment the next line if you want to allow your local frontend for development:
+      // "http://localhost:5173",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
