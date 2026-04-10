@@ -18,8 +18,10 @@ app.use(
   cors({
     origin: [
       "https://se-project-react-1pv7.onrender.com",
-      // Uncomment the next line if you want to allow your local frontend for development:
-      // "http://localhost:5173",
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3002"
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
