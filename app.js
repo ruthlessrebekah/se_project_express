@@ -13,6 +13,7 @@ const { requestLogger, errorLogger } = require("./middlewares/logger");
 const errorHandler = require("./middlewares/error-handler");
 
 const app = express();
+app.set("trust proxy", 1); // Enable trust proxy for Render or other proxies
 
 app.use(
   cors({

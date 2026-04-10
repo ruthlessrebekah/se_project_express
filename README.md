@@ -55,9 +55,26 @@ Before committing your code, make sure you edit the file `sprint.txt` in the roo
 
 ## Domain Names
 
-**Frontend:** https://ruthless-wtwr-2025.jumpingcrab.com
-**Backend:** https://api.ruthless-wtwr-2025.jumpingcrab.com
+**Frontend:** https://se-project-react-1pv7.onrender.com
+**Backend:** https://se-project-express-g21v.onrender.com
 
 ## Project Pitch Video
 
 Check out [my WTWR Project Pitch Video](https://www.loom.com/share/dc79bf894154495192fe12d41f1661ac), where I describe my project and some challenges I faced while building it.
+
+## Deployment on Render
+
+This project is configured for deployment on [Render](https://render.com/). The following changes and notes apply:
+
+- **trust proxy** is enabled in the Express app to ensure correct client IP handling and rate limiter compatibility when running behind Render's proxy infrastructure.
+- Make sure to set any required environment variables in the Render dashboard (e.g., JWT_SECRET, DB connection string, etc.).
+- The `Procfile` and `render.yaml` files are included for Render deployment configuration.
+
+### How to Deploy
+
+1. Push your code to the connected GitHub repository.
+2. Render will automatically build and deploy the app based on the configuration files.
+3. Ensure your environment variables are set in the Render dashboard.
+4. The backend will be available at the Render-provided URL (see above for domain).
+
+**Note:** If you are running the app locally, you do not need to enable `trust proxy`.
